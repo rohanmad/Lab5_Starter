@@ -1,86 +1,59 @@
-// expose.js
-
 window.addEventListener('DOMContentLoaded', init);
 
 function init() {
-  // TODO
-
-
   const select = document.querySelector("#horn-select");
-  const volumeLevel = document.createElement("audio");
+  const volumeSlider = document.querySelector("#volume");
+  const btn = document.querySelector("#expose button");
+  const jsConfetti = new JSConfetti();
+  const hornImg = document.querySelector("#expose img");
+  const volImg = document.querySelector("#volume-controls img");
+  const audio = document.querySelector("audio.hidden");
+
   let horn = "";
 
+  select.addEventListener("change", (event) => {
+    horn = event.target.value;
 
-  select.addEventListener("change", (event)=>{
-    // console.log(event.target.value);
-    if(event.target.value=="car-horn"){
-      horn = event.target.value;
-      let carhornimg = document.querySelector("#expose img");
-      carhornimg.src = "assets/images/car-horn.svg";
-      carhornimg.alt = "car horns";
+    if (horn === "car-horn") {
+      hornImg.src = "assets/images/car-horn.svg";
+      hornImg.alt = "car horn";
+      audio.src = "assets/audio/car-horn.mp3";
     }
-    if(event.target.value=="air-horn"){
-      horn = event.target.value;
-      let airhornimg = document.querySelector("#expose img");
-      airhornimg.src = "assets/images/air-horn.svg";
-      airhornimg.alt = "air horn";
+    if (horn === "air-horn") {
+      hornImg.src = "assets/images/air-horn.svg";
+      hornImg.alt = "air horn";
+      audio.src = "assets/audio/air-horn.mp3";
     }
-    if(event.target.value=="party-horn"){
-      horn = event.target.value;
-      let partyhornimg = document.querySelector("#expose img");
-      partyhornimg.src = "assets/images/party-horn.svg";
-      partyhornimg.alt = "car horns";
+    if (horn === "party-horn") {
+      hornImg.src = "assets/images/party-horn.svg";
+      hornImg.alt = "party horn";
+      audio.src = "assets/audio/party-horn.mp3";
     }
   });
 
-  const volumeSlider = document.querySelector("#volume");
+  volumeSlider.addEventListener("input", (event) => {
+    let vol = event.target.value;
+    audio.volume = vol / 100;
 
-  volumeSlider.addEventListener("input", (event)=>{
-    const vol = event.target.value;
-    console.log(vol);
-    if(vol==0){
-      let volimg = document.querySelector("#volume-controls img");
-      volimg.src = "assets/icons/volume-level-0.svg";
-      volumeLevel.volume = volumeSlider.value / 100;
+    if (vol == 0) {
+      volImg.src = "assets/icons/volume-level-0.svg";
     }
-    if(vol > 0 && vol < 33){
-      let volimg = document.querySelector("#volume-controls img");
-      volimg.src = "assets/icons/volume-level-1.svg";
-      volumeLevel.volume = volumeSlider.value / 100;
+    if (vol > 0 && vol < 33) {
+      volImg.src = "assets/icons/volume-level-1.svg";
     }
-    if(vol > 33 && vol < 66){
-      let volimg = document.querySelector("#volume-controls img");
-      volimg.src = "assets/icons/volume-level-2.svg";
-      volumeLevel.volume = volumeSlider.value / 100;
+    if (vol >= 33 && vol < 66) {
+      volImg.src = "assets/icons/volume-level-2.svg";
     }
-    if(vol > 66){
-      let volimg = document.querySelector("#volume-controls img");
-      volimg.src = "assets/icons/volume-level-3.svg";
-      volumeLevel.volume = volumeSlider.value / 100;
+    if (vol >= 66) {
+      volImg.src = "assets/icons/volume-level-3.svg";
     }
   });
 
+  btn.addEventListener("click", () => {
+    audio.currentTime = 0;
+    audio.play();
 
-  const btn = document.querySelector("#expose button");
-
-  const jsConfetti = new JSConfetti();
-  const canvas = document.querySelector("canvas");
-
-  btn.addEventListener("click", (event)=>{
-    if(horn=="car-horn"){
-      let audio = new Audio("assets/audio/car-horn.mp3");
-      audio.volume = volumeLevel.volume;
-      audio.play();
-    }
-    if(horn=="air-horn"){
-      let audio = new Audio("assets/audio/air-horn.mp3");
-      audio.volume = volumeLevel.volume;
-      audio.play();
-    }
-    if(horn=="party-horn"){
-      let audio = new Audio("assets/audio/party-horn.mp3");
-      audio.volume = volumeLevel.volume;
-      audio.play();
+    if (horn === "party-horn") {
       jsConfetti.addConfetti({
         emojis: ['🎉', '🥳', '✨'],
         confettiNumber: 100,
@@ -88,7 +61,4 @@ function init() {
       });
     }
   });
-
-
-
 }
